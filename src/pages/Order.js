@@ -17,7 +17,7 @@ const OrderPage = () => {
       const fetchOrders = async () => {
         try {
           const response = await fetch(
-            `https://nexus-backend-latest.onrender.com/api/Order/user/${user.id}`,
+            `http://localhost:5047/api/Order/user/${user.id}`,
             {
               method: "GET",
               headers: {

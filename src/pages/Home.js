@@ -17,7 +17,7 @@ const HomePage = () => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(
-          "https://nexus-backend-latest.onrender.com/api/Product"
+          "http://localhost:5047/api/Product"
         );
         setProducts(response.data);
         console.log(response.data);

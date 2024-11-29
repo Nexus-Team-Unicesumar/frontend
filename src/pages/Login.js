@@ -17,7 +17,7 @@ const Login = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://nexus-backend-latest.onrender.com/api/User/login",
+        "http://localhost:5047/api/User/login",
         {
           method: "POST",
           headers: {
@@ -52,7 +52,7 @@ const Login = () => {
   const fetchUserData = async (token) => {
     try {
       const response = await fetch(
-        "https://nexus-backend-latest.onrender.com/api/User/me",
+        "http://localhost:5047/api/User/me",
         {
           method: "GET",
           headers: {
