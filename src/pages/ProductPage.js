@@ -118,7 +118,7 @@ const ProductPage = () => {
           <div className="imageContainer">
             {product.imageUrl ? (
               <img
-                src={`https://nexus-backend-latest.onrender.com${product.imageUrl}`}
+                src={`http://localhost:5047${product.imageUrl}`}
                 alt={product.name}
                 className="productImagem"
               />

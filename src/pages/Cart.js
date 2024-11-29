@@ -148,7 +148,7 @@ const CartPage = () => {
               <div className="imageContainer">
                 {item.imageUrl ? (
                   <img
-                    src={`https://nexus-backend-latest.onrender.com${item.imageUrl}`}
+                    src={`http://localhost:5047${item.imageUrl}`}
                     alt={item.name}
                     className="productImage"
                   />

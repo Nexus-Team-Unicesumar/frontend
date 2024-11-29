@@ -31,31 +31,16 @@ const ProductForm = () => {
 
   const handlePriceInputChange = (e) => {
     const value = e.target.value;
-
-    const formattedValue = value.replace(/[^\d,]/g, "");
-
-    const numericValue = parseFloat(formattedValue.replace(",", "."));
-
-    setProduct((prev) => ({
-      ...prev,
-      price: isNaN(numericValue) ? "" : formattedValue,
-    }));
+    setProduct((prev) => ({ ...prev, price: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    let price = parseFloat(product.price.replace(",", "."));
-
-    if (isNaN(price)) {
-      alert("Preço inválido");
-      return;
-    }
-
     const formData = new FormData();
     formData.append("Name", product.name);
     formData.append("Description", product.description);
-    formData.append("Price", price.toFixed(2));
+    formData.append("Price", product.price);
     formData.append("Category", product.category);
 
     if (product.image) {

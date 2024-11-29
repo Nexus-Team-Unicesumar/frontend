@@ -42,7 +42,7 @@ const Product = (props) => {
     <div className="productCard">
       <Link to={`/produto/${id}`} className="product-link">
         <img
-          src={`https://nexus-backend-latest.onrender.com${imageUrl}`}
+          src={`http://localhost:5047${imageUrl}`}
           alt={props.product.title || "Imagem do Produto"}
           style={{ margin: "0 auto", width: "80%", height: 200 }}
         />
