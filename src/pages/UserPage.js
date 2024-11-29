@@ -38,7 +38,7 @@ const UserPage = () => {
       return;
     }
 
-    fetch("https://nexus-backend-latest.onrender.com/api/User/me", {
+    fetch("http://localhost:5047/api/User/me", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((response) => response.json())
@@ -94,7 +94,7 @@ const UserPage = () => {
 
     try {
       const response = await fetch(
-        `https://nexus-backend-latest.onrender.com/api/User/${id}`,
+        `http://localhost:5047/api/User/${id}`,
         {
           method: "PUT",
           headers: {

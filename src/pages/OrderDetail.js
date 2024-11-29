@@ -17,7 +17,7 @@ const OrderDetail = () => {
     const fetchOrderDetails = async () => {
       try {
         const response = await fetch(
-          `https://nexus-backend-latest.onrender.com/api/Order/${id}`,
+          `http://localhost:5047/api/Order/${id}`,
           {
             method: "GET",
             headers: {

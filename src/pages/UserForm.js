@@ -22,7 +22,7 @@ const UserForm = (props) => {
 
     try {
       const response = await fetch(
-        `https://nexus-backend-latest.onrender.com/api/User`,
+        `http://localhost:5047/api/User`,
         {
           method: "POST",
           headers: {
