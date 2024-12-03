@@ -1,11 +1,14 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DeleteIcon from "@mui/icons-material/Delete";
-import "./Cart.css";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import logo from "../assets/logo.png";
 import { AuthContext } from "../auth/AuthContext";
+
+import Header from "../components/Header";
+import HeaderNav from "../components/HeaderNav";
+import "./Cart.css";
 
 const CartPage = () => {
   const navigate = useNavigate();
@@ -13,6 +16,8 @@ const CartPage = () => {
 
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0); // Estado para controlar a página atual
+  const itemsPerPage = 4; // Defina o número de itens por página
 
   const initialOptions = {
     clientId:
@@ -47,6 +52,18 @@ const CartPage = () => {
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
+  const handleNextPage = () => {
+    if ((currentPage + 1) * itemsPerPage < cartItems.length) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
   const createOrderInBackend = async (paymentDetails) => {
     try {
       const items = cartItems.map((item) => ({
@@ -64,17 +81,14 @@ const CartPage = () => {
       };
 
       if (user && user.id) {
-        const response = await fetch(
-          "http://localhost:5047/api/Order",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(orderData),
-          }
-        );
+        const response = await fetch("http://localhost:5047/api/Order", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(orderData),
+        });
 
         if (!response.ok) {
           throw new Error("Erro ao criar o pedido.");
@@ -90,128 +104,120 @@ const CartPage = () => {
     }
   };
 
+  // Função que retorna os itens da página atual
+  const getCurrentPageItems = () => {
+    const startIndex = currentPage * itemsPerPage;
+    return cartItems.slice(startIndex, startIndex + itemsPerPage);
+  };
+
   if (cartItems.length === 0)
     return (
       <>
-        <div className="profile-header">
-          <div style={{ paddingLeft: "2%" }}>
-            <ArrowBackIcon
-              fontSize="small"
-              style={{ cursor: "pointer" }}
-              onClick={() => navigate("/")}
-            />
-            <img
-              src={logo}
-              alt="Logo"
-              style={{
-                marginBottom: -20,
-                marginLeft: 20,
-                width: 200,
-                height: 60,
-                cursor: "pointer",
-              }}
-              onClick={() => navigate("/")}
-            />
-          </div>
+        <HeaderNav />
+        <Header />
+        <div className="emptyCart">
+          <p>O carrinho está vazio. Adicione itens para continuar.</p>
         </div>
-        <div>Seu carrinho está vazio</div>
       </>
     );
 
   return (
     <PayPalScriptProvider options={initialOptions}>
-      <div className="profile-header">
-        <div style={{ paddingLeft: "2%" }}>
-          <ArrowBackIcon
-            fontSize="small"
-            style={{ cursor: "pointer" }}
-            onClick={() => navigate("/")}
-          />
-          <img
-            src={logo}
-            alt="Logo"
-            style={{
-              marginBottom: -20,
-              marginLeft: 20,
-              width: 200,
-              height: 60,
-              cursor: "pointer",
-            }}
-            onClick={() => navigate("/")}
-          />
-        </div>
-      </div>
+      <HeaderNav />
+      <Header />
       <div className="cartPage">
         <div className="cartContainer">
-          {cartItems.map((item) => (
-            <div key={item.id} className="cartItem">
-              <div className="imageContainer">
-                {item.imageUrl ? (
+          <div className="cartItemsList">
+            {getCurrentPageItems().map((item) => (
+              <div key={item.id} className="cartItem">
+                <div className="cartItemImage">
                   <img
                     src={`http://localhost:5047${item.imageUrl}`}
                     alt={item.name}
                     className="productImage"
                   />
-                ) : (
-                  <p>Imagem não disponível</p>
-                )}
-              </div>
-              <div className="cartItemDetails">
-                <h2>{item.name}</h2>
-                <p>{item.description}</p>
-                <label className="priceProduct">
-                  R${item.price.toFixed(2)}
-                </label>
-                <div>
-                  <label>Quantidade:</label>
-                  <input
-                    type="number"
-                    value={item.quantity}
-                    onChange={(e) => {
-                      const updatedCart = cartItems.map((cartItem) =>
-                        cartItem.id === item.id
-                          ? { ...cartItem, quantity: Number(e.target.value) }
-                          : cartItem
-                      );
-                      setCartItems(updatedCart);
-                      localStorage.setItem("cart", JSON.stringify(updatedCart));
-                    }}
-                    min="1"
-                  />
                 </div>
-                <DeleteIcon
-                  className="removeButton"
-                  onClick={() => handleRemoveItem(item.id)}
-                />
+                <div className="cartItemDetails">
+                  <h3>{item.name}</h3>
+                  <p className="description">{item.description}</p>
+                  <div className="cartItemPrice">
+                    <span className="price">R${item.price.toFixed(2)}</span>
+                    <div className="quantityContainer">
+                      <label>Quantidade:</label>
+                      <input
+                        type="number"
+                        value={item.quantity}
+                        min="1"
+                        onChange={(e) => {
+                          const updatedCart = cartItems.map((cartItem) =>
+                            cartItem.id === item.id
+                              ? {
+                                  ...cartItem,
+                                  quantity: Number(e.target.value),
+                                }
+                              : cartItem
+                          );
+                          setCartItems(updatedCart);
+                          localStorage.setItem(
+                            "cart",
+                            JSON.stringify(updatedCart)
+                          );
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="removeItem">
+                  <DeleteIcon onClick={() => handleRemoveItem(item.id)} />
+                </div>
               </div>
+            ))}
+          </div>
+
+          <div className="paginationControls">
+            <button
+              className="paginationButton"
+              onClick={handlePrevPage}
+              disabled={currentPage === 0}
+            >
+              <ArrowBackIcon />
+            </button>
+            <button
+              className="paginationButton"
+              onClick={handleNextPage}
+              disabled={(currentPage + 1) * itemsPerPage >= cartItems.length}
+            >
+              <ArrowForwardIcon />
+            </button>
+          </div>
+
+          <div className="totalPriceSection">
+            <div className="totalPrice">
+              <p>Total: R${totalPrice.toFixed(2)}</p>
             </div>
-          ))}
-        </div>
 
-        <div className="totalPrice">
-          <p>Total a pagar: R${totalPrice.toFixed(2)}</p>
+            <div className="checkoutSection">
+              <PayPalButtons
+                createOrder={(data, actions) => {
+                  return actions.order.create({
+                    purchase_units: [
+                      {
+                        amount: {
+                          value: totalPrice.toFixed(2),
+                        },
+                      },
+                    ],
+                  });
+                }}
+                onApprove={(data, actions) => {
+                  return actions.order.capture().then((details) => {
+                    createOrderInBackend(details);
+                  });
+                }}
+              />
+            </div>
+          </div>
         </div>
-
-        <div id="paypal-button-container" className="containerBtn"></div>
-        <PayPalButtons
-          key={totalPrice}
-          createOrder={(data, actions) => {
-            return actions.order.create({
-              purchase_units: [
-                {
-                  amount: {
-                    value: totalPrice.toFixed(2), // Corrigido para garantir que tenha duas casas decimais
-                  },
-                },
-              ],
-            });
-          }}
-          onApprove={(data, actions) => {
-            return actions.order.capture().then((details) => {
-              createOrderInBackend(details);
-            });
-          }}
-        />
       </div>
     </PayPalScriptProvider>
   );
