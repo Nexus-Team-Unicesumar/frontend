@@ -123,3 +123,43 @@
 .paginationButton:hover:not(:disabled) {
   background-color: #0056b3;
 }
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 75vh;
+  background-color: #ffffff;
+  font-family: "Open Sans", sans-serif;
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.nexusContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nexusIcon {
+  font-size: 80px;
+  color: #3a3d46;
+  animation: jump 1s ease-in-out infinite;
+}
+
+@keyframes jump {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}

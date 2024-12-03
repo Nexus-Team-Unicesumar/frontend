@@ -115,8 +115,11 @@ const CartPage = () => {
       <>
         <HeaderNav />
         <Header />
-        <div className="emptyCart">
-          <p>O carrinho está vazio. Adicione itens para continuar.</p>
+        <div className="container">
+          <div className="nexusContainer">
+            <p className="nexusIcon">Nexus</p>
+          </div>
+          <h2 className="title">Coloque produtos no carrinho!</h2>
         </div>
       </>
     );
