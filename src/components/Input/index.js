@@ -1,14 +1,41 @@
-import React, { useState } from "react";
-
+import React, { useState, useRef } from "react";
 import SearchIcon from "@mui/icons-material/Search";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Input = (props) => {
   const [inputValue, setInputValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const timeoutRef = useRef(null);
 
   const handleChange = (event) => {
-    setInputValue(event.target.value);
-    props.onSearch(event.target.value);
+    const value = event.target.value;
+    setInputValue(value);
+
+    if (value.trim() === "") {
+      clearTimeout(timeoutRef.current);
+      props.onSearch("");
+      setIsLoading(false);
+      return;
+    }
+
+    clearTimeout(timeoutRef.current);
+
+    setIsLoading(true);
+    timeoutRef.current = setTimeout(() => {
+      props.onSearch(value);
+      setIsLoading(false);
+    }, 3000);
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      clearTimeout(timeoutRef.current);
+      if (inputValue.trim() !== "") {
+        props.onSearch(inputValue);
+      }
+      setIsLoading(false);
+    }
   };
 
   const handleFocus = () => {
@@ -20,15 +47,19 @@ const Input = (props) => {
   };
 
   const handleSearch = () => {
-    props.onSearch(inputValue);
+    clearTimeout(timeoutRef.current);
+    if (inputValue.trim() !== "") {
+      props.onSearch(inputValue);
+    }
+    setIsLoading(false);
   };
 
   const styles = {
     inputContainer: {
       display: "flex",
       alignItems: "center",
+      position: "relative",
     },
-
     input: {
       flexGrow: 1,
       padding: "10px",
@@ -50,12 +81,16 @@ const Input = (props) => {
       borderBottomLeftRadius: "0",
       borderTopRightRadius: "15px",
       borderBottomRightRadius: "15px",
-      backgroundColor: "#8402da",
+      backgroundColor: "#000000",
       color: "#FFFFFF",
       cursor: "pointer",
       transition: "background-color 0.3s",
       fontFamily: "'Open Sans', sans-serif",
       fontWeight: "bold",
+    },
+    loading: {
+      position: "absolute",
+      right: "10px",
     },
   };
 
@@ -69,10 +104,12 @@ const Input = (props) => {
         onChange={handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
       />
       <button onClick={handleSearch} style={styles.button}>
         <SearchIcon />
       </button>
+      {isLoading && <CircularProgress size={20} style={styles.loading} />}
     </div>
   );
 };

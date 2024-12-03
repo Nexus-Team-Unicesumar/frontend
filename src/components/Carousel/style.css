@@ -6,7 +6,7 @@
 }
 
 .slide {
-  max-height: 65vh;
+  max-height: 70vh;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 5px;
 }
@@ -14,9 +14,9 @@
 .slick-center .slide {
   transform: scale(1.08);
   transition: transform 0.3s ease;
-  border-color: rgba(176, 106, 241, 0.5);
+  border-color: rgba(0, 0, 0, 0.2);
 }
 
 .slick-slide {
-  padding: 20px;
+  padding: 10px;
 }

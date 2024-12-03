@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./style.css";
 
 const mapCategoriesToPortuguese = (categories) => {
@@ -8,15 +9,25 @@ const mapCategoriesToPortuguese = (categories) => {
   }));
 };
 
-const Section = ({ onCategorySelect }) => {
+const Section = () => {
+  const navigate = useNavigate();
+
   const categories = [
-    { apiCategory: "Smartphone", displayName: "Celulares" },
+    { apiCategory: "Celulares", displayName: "Celulares" },
     { apiCategory: "Acessorios", displayName: "Acessórios" },
     { apiCategory: "Roupas", displayName: "Roupas" },
-    { apiCategory: "Eletrodomesticos", displayName: "Eletrodomesticos" },
+    { apiCategory: "Eletrodomesticos", displayName: "Eletrodomésticos" },
+    { apiCategory: "Relogios", displayName: "Relógios" },
+    { apiCategory: "Eletronicos", displayName: "Eletrônicos" },
+    { apiCategory: "Saude e Beleza", displayName: "Saúde e Beleza" },
+    { apiCategory: "Casa e Jardim", displayName: "Casa e Jardim" },
   ];
 
   const mappedCategories = mapCategoriesToPortuguese(categories);
+
+  const handleCategoryClick = (apiCategory) => {
+    navigate(`/categoria/${apiCategory}`);
+  };
 
   return (
     <section className="section">
@@ -25,7 +36,7 @@ const Section = ({ onCategorySelect }) => {
           <div
             key={apiCategory}
             className="category"
-            onClick={() => onCategorySelect(apiCategory)}
+            onClick={() => handleCategoryClick(apiCategory)}
           >
             <p>{displayName}</p>
           </div>
