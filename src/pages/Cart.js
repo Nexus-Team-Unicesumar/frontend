@@ -1,14 +1,19 @@
 import React, { useState, useEffect, useContext } from "react";
+
 import { useNavigate } from "react-router-dom";
+
+import "./Cart.css";
+
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { AuthContext } from "../auth/AuthContext";
 
 import Header from "../components/Header";
 import HeaderNav from "../components/HeaderNav";
-import "./Cart.css";
+
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+
+import { AuthContext } from "../auth/AuthContext";
 
 const CartPage = () => {
   const navigate = useNavigate();
@@ -16,8 +21,8 @@ const CartPage = () => {
 
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [currentPage, setCurrentPage] = useState(0); // Estado para controlar a página atual
-  const itemsPerPage = 4; // Defina o número de itens por página
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 4;
 
   const initialOptions = {
     clientId:
@@ -104,7 +109,6 @@ const CartPage = () => {
     }
   };
 
-  // Função que retorna os itens da página atual
   const getCurrentPageItems = () => {
     const startIndex = currentPage * itemsPerPage;
     return cartItems.slice(startIndex, startIndex + itemsPerPage);
