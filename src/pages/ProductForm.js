@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
+import "./ProductForm.css";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/logo.png";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import "./ProductForm.css";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Header from "../components/Header";
+import HeaderNav from "../components/HeaderNav";
 
 const ProductForm = () => {
   const navigate = useNavigate();
@@ -19,6 +22,8 @@ const ProductForm = () => {
     image: productFromState?.imageUrl || "",
   });
 
+  const [imagePreview, setImagePreview] = useState(product.image || "");
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProduct((prev) => ({ ...prev, [name]: value }));
@@ -27,11 +32,20 @@ const ProductForm = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setProduct((prev) => ({ ...prev, image: file }));
+
+    if (file) {
+      setImagePreview(URL.createObjectURL(file));
+    }
   };
 
   const handlePriceInputChange = (e) => {
     const value = e.target.value;
     setProduct((prev) => ({ ...prev, price: value }));
+  };
+
+  const handleImageRemove = () => {
+    setProduct((prev) => ({ ...prev, image: null }));
+    setImagePreview("");
   };
 
   const handleSubmit = async (e) => {
@@ -82,26 +96,8 @@ const ProductForm = () => {
 
   return (
     <div>
-      <div className="profile-header">
-        <div style={{ paddingLeft: "2%" }}>
-          <ArrowBackIcon
-            fontSize="small"
-            style={{ cursor: "pointer" }}
-            onClick={() => navigate("/")}
-          />
-          <img
-            src={logo}
-            style={{
-              marginBottom: -20,
-              marginLeft: 20,
-              width: 200,
-              height: 60,
-              cursor: "pointer",
-            }}
-            onClick={() => navigate("/")}
-          />
-        </div>
-      </div>
+      <HeaderNav />
+      <Header />
 
       <div className="form-container">
         <form onSubmit={handleSubmit}>
@@ -163,6 +159,19 @@ const ProductForm = () => {
               onChange={handleImageChange}
             />
           </div>
+
+          {imagePreview && (
+            <div className="image-preview-container">
+              <img src={imagePreview} alt="Preview" className="image-preview" />
+              <button
+                type="button"
+                className="delete-image-btn"
+                onClick={handleImageRemove}
+              >
+                <DeleteIcon />
+              </button>
+            </div>
+          )}
 
           <div className="container-button">
             <button className="btn-form" type="submit">
