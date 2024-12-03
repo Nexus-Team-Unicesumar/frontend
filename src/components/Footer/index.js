@@ -41,20 +41,11 @@ const Footer = () => {
           <ul>
             <li>
               <a
-                href="https://www.facebook.com"
+                href="https://github.com/Rafael-Beraldo"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Facebook
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://www.twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Twitter
+                GitHub
               </a>
             </li>
             <li>
@@ -72,10 +63,7 @@ const Footer = () => {
           <h4>Contate-nos</h4>
           <ul>
             <li>
-              <a href="mailto:contato@empresa.com">Email</a>
-            </li>
-            <li>
-              <a href="/endereco">Endereço</a>
+              <a href="mailto:raffatemplate@gmail.com">Email</a>
             </li>
           </ul>
         </div>
