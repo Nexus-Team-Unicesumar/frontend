@@ -1,0 +1,30 @@
+.about-page-container {
+  max-width: 1200px;
+  margin: 2% auto;
+  padding: 2% 5%;
+  background-color: #f9f9f9;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.about-content {
+  font-family: "Roboto", sans-serif;
+  line-height: 1.8;
+  color: #333;
+}
+
+.about-content h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #3a3d46;
+}
+
+.about-content p {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.about-content strong {
+  color: #3a3d46;
+}
