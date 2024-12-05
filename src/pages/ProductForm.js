@@ -1,17 +1,10 @@
 import React, { useState, useEffect } from "react";
-
 import "./ProductForm.css";
-
 import logo from "../assets/logo.png";
-
 import axios from "axios";
-
 import { useNavigate, useLocation } from "react-router-dom";
-
 import Header from "../components/Header";
 import HeaderNav from "../components/HeaderNav";
-
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 const ProductForm = () => {
@@ -104,67 +97,51 @@ const ProductForm = () => {
     <div>
       <HeaderNav />
       <Header />
-
-      <div className="form-container">
+      <div className="product-form-container">
         <form onSubmit={handleSubmit}>
-          <div>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={product.name}
-              placeholder="Nome..."
-              className="inputForm"
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div>
-            <input
-              type="text"
-              id="description"
-              placeholder="Descrição..."
-              name="description"
-              value={product.description}
-              className="inputForm"
-              onChange={handleInputChange}
-            />
-          </div>
-          <div>
-            <input
-              type="text"
-              id="price"
-              placeholder="Preço..."
-              name="price"
-              value={product.price}
-              className="inputForm"
-              onChange={handlePriceInputChange}
-              required
-            />
-          </div>
-          <div>
-            <input
-              type="text"
-              id="category"
-              placeholder="Categoria..."
-              name="category"
-              className="inputForm"
-              value={product.category}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-
-          <div>
-            <input
-              type="file"
-              className="inputForm"
-              id="image"
-              name="image"
-              accept="image/*"
-              onChange={handleImageChange}
-            />
-          </div>
+          <h3>{product.id ? "Atualizar Produto" : "Criar Produto"}</h3>
+          <input
+            type="text"
+            name="name"
+            value={product.name}
+            placeholder="Nome do Produto"
+            className="product-input"
+            onChange={handleInputChange}
+            required
+          />
+          <input
+            type="text"
+            name="description"
+            value={product.description}
+            placeholder="Descrição do Produto"
+            className="product-input"
+            onChange={handleInputChange}
+          />
+          <input
+            type="text"
+            name="price"
+            value={product.price}
+            placeholder="Preço"
+            className="product-input"
+            onChange={handlePriceInputChange}
+            required
+          />
+          <input
+            type="text"
+            name="category"
+            value={product.category}
+            placeholder="Categoria"
+            className="product-input"
+            onChange={handleInputChange}
+            required
+          />
+          <input
+            type="file"
+            className="product-input"
+            name="image"
+            accept="image/*"
+            onChange={handleImageChange}
+          />
 
           {imagePreview && (
             <div className="image-preview-container">
@@ -179,8 +156,8 @@ const ProductForm = () => {
             </div>
           )}
 
-          <div className="container-button">
-            <button className="btn-form" type="submit">
+          <div className="product-container-button">
+            <button type="submit" className="product-btn-form">
               {product.id ? "Atualizar Produto" : "Criar Produto"}
             </button>
           </div>
