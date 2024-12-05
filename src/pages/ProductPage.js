@@ -1,9 +1,18 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
 import "./ProductPage.css";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+
+import { useParams, useNavigate } from "react-router-dom";
+
 import logo from "../assets/logo.png";
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
+import Header from "../components/Header";
+import HeaderNav from "../components/HeaderNav";
+
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+
 import { AuthContext } from "../auth/AuthContext";
 
 const ProductPage = () => {
@@ -24,9 +33,7 @@ const ProductPage = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:5047/api/Product/${id}`
-        );
+        const response = await fetch(`http://localhost:5047/api/Product/${id}`);
         const data = await response.json();
         setProduct(data);
         setTotalPrice(data.price);
@@ -66,17 +73,14 @@ const ProductPage = () => {
         status: "AGUARDANDO",
       };
 
-      const response = await fetch(
-        "http://localhost:5047/api/Order",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(orderData),
-        }
-      );
+      const response = await fetch("http://localhost:5047/api/Order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(orderData),
+      });
 
       if (!response.ok) {
         throw new Error("Erro ao criar o pedido no backend.");
@@ -92,27 +96,8 @@ const ProductPage = () => {
 
   return (
     <PayPalScriptProvider options={initialOptions}>
-      <div className="profile-header">
-        <div style={{ paddingLeft: "2%" }}>
-          <ArrowBackIcon
-            fontSize="small"
-            style={{ cursor: "pointer" }}
-            onClick={() => navigate("/")}
-          />
-          <img
-            src={logo}
-            alt="Logo"
-            style={{
-              marginBottom: -20,
-              marginLeft: 20,
-              width: 200,
-              height: 60,
-              cursor: "pointer",
-            }}
-            onClick={() => navigate("/")}
-          />
-        </div>
-      </div>
+      <HeaderNav />
+      <Header />
       <div className="productPage">
         <div className="productContainer">
           <div className="imageContainer">
@@ -130,7 +115,7 @@ const ProductPage = () => {
           <p>{product.description}</p>
           {user && user.isAdmin ? (
             <div className="container-button">
-              <button className="btn-form" onClick={handleEdit}>
+              <button className="btn-product-edit" onClick={handleEdit}>
                 Editar
               </button>
             </div>

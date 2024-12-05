@@ -1,6 +1,5 @@
 .headerProduct {
   width: 100%;
-  background-color: #b069f1;
   min-height: 10vh;
   display: flex;
   align-items: center;
@@ -35,8 +34,8 @@
 
 .productImagem {
   display: block;
-  width: 100%;
-  height: 70vh;
+  width: 70%;
+  height: 45vh;
 }
 
 .priceProduct {
@@ -73,14 +72,15 @@
   left: 0;
 }
 
-.btnProductPage {
+.btn-product-edit {
   outline: none;
   width: 100%;
   border: none;
-  background-color: #b069f1;
   padding: 15px;
   border-radius: 20px;
   color: #ffffff;
+  margin-top: 15px;
+  background-color: #3a3d46;
   font-weight: bold;
   font-size: 16px;
 }

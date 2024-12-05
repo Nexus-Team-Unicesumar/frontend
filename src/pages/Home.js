@@ -107,7 +107,7 @@ const HomePage = () => {
   return (
     <div>
       <HeaderNav />
-      <Header onSearch={handleSearch} />
+      <Header isMain onSearch={handleSearch} />
       <Section onCategorySelect={handleCategorySelect} />
 
       <div className={commonStyles.center}>

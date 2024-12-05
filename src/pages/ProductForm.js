@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import "./ProductForm.css";
+import logo from "../assets/logo.png";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
-import logo from "../assets/logo.png";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import "./ProductForm.css";
+import Header from "../components/Header";
+import HeaderNav from "../components/HeaderNav";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const ProductForm = () => {
   const navigate = useNavigate();
@@ -19,6 +21,8 @@ const ProductForm = () => {
     image: productFromState?.imageUrl || "",
   });
 
+  const [imagePreview, setImagePreview] = useState(product.image || "");
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProduct((prev) => ({ ...prev, [name]: value }));
@@ -27,11 +31,20 @@ const ProductForm = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setProduct((prev) => ({ ...prev, image: file }));
+
+    if (file) {
+      setImagePreview(URL.createObjectURL(file));
+    }
   };
 
   const handlePriceInputChange = (e) => {
     const value = e.target.value;
     setProduct((prev) => ({ ...prev, price: value }));
+  };
+
+  const handleImageRemove = () => {
+    setProduct((prev) => ({ ...prev, image: null }));
+    setImagePreview("");
   };
 
   const handleSubmit = async (e) => {
@@ -82,90 +95,69 @@ const ProductForm = () => {
 
   return (
     <div>
-      <div className="profile-header">
-        <div style={{ paddingLeft: "2%" }}>
-          <ArrowBackIcon
-            fontSize="small"
-            style={{ cursor: "pointer" }}
-            onClick={() => navigate("/")}
-          />
-          <img
-            src={logo}
-            style={{
-              marginBottom: -20,
-              marginLeft: 20,
-              width: 200,
-              height: 60,
-              cursor: "pointer",
-            }}
-            onClick={() => navigate("/")}
-          />
-        </div>
-      </div>
-
-      <div className="form-container">
+      <HeaderNav />
+      <Header />
+      <div className="product-form-container">
         <form onSubmit={handleSubmit}>
-          <div>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={product.name}
-              placeholder="Nome..."
-              className="inputForm"
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div>
-            <input
-              type="text"
-              id="description"
-              placeholder="Descrição..."
-              name="description"
-              value={product.description}
-              className="inputForm"
-              onChange={handleInputChange}
-            />
-          </div>
-          <div>
-            <input
-              type="text"
-              id="price"
-              placeholder="Preço..."
-              name="price"
-              value={product.price}
-              className="inputForm"
-              onChange={handlePriceInputChange}
-              required
-            />
-          </div>
-          <div>
-            <input
-              type="text"
-              id="category"
-              placeholder="Categoria..."
-              name="category"
-              className="inputForm"
-              value={product.category}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
+          <h3>{product.id ? "Atualizar Produto" : "Criar Produto"}</h3>
+          <input
+            type="text"
+            name="name"
+            value={product.name}
+            placeholder="Nome do Produto"
+            className="product-input"
+            onChange={handleInputChange}
+            required
+          />
+          <input
+            type="text"
+            name="description"
+            value={product.description}
+            placeholder="Descrição do Produto"
+            className="product-input"
+            onChange={handleInputChange}
+          />
+          <input
+            type="text"
+            name="price"
+            value={product.price}
+            placeholder="Preço"
+            className="product-input"
+            onChange={handlePriceInputChange}
+            required
+          />
+          <input
+            type="text"
+            name="category"
+            value={product.category}
+            placeholder="Categoria"
+            className="product-input"
+            onChange={handleInputChange}
+            required
+          />
+          <input
+            type="file"
+            className="product-input"
+            name="image"
+            accept="image/*"
+            onChange={handleImageChange}
+          />
 
-          <div>
-            <input
-              type="file"
-              className="inputForm"
-              id="image"
-              name="image"
-              accept="image/*"
-              onChange={handleImageChange}
-            />
-          </div>
+          {imagePreview && (
+            <div className="image-preview-container">
+              <img src={imagePreview} alt="Preview" className="image-preview" />
+              <button
+                type="button"
+                className="delete-image-btn"
+                onClick={handleImageRemove}
+              >
+                <DeleteIcon />
+              </button>
+            </div>
+          )}
 
-          <div className="container-button">
-            <button className="btn-form" type="submit">
+          <div className="product-container-button">
+            <button type="submit" className="product-btn-form">
               {product.id ? "Atualizar Produto" : "Criar Produto"}
             </button>
           </div>
