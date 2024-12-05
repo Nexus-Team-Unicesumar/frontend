@@ -1,13 +1,16 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import React, { useState, useEffect, useContext } from "react";
 import "./UserPage.css";
-import logo from "../assets/logo.png";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../auth/AuthContext";
+import Header from "../components/Header";
+import HeaderNav from "../components/HeaderNav";
+import userImage from "../assets/user.jpg";
+import Footer from "../components/Footer";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const UserPage = () => {
   const navigate = useNavigate();
-  const { user, setUser } = useContext(AuthContext);
+  const { user, setUser, token } = useContext(AuthContext);
 
   const [id, setId] = useState("");
   const [isEditing, setIsEditing] = useState(false);
@@ -20,16 +23,11 @@ const UserPage = () => {
     phone: "",
     email: "",
     imageUrl: "",
+    rating: 4.5,
   });
-  const [errors, setErrors] = useState({
-    firstName: false,
-    lastName: false,
-    street: false,
-    number: false,
-    city: false,
-    phone: false,
-    email: false,
-  });
+  const [orders, setOrders] = useState([]);
+  const [loadingOrders, setLoadingOrders] = useState(true);
+  const [errorOrders, setErrorOrders] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -38,26 +36,60 @@ const UserPage = () => {
       return;
     }
 
+    // Carregar dados do usuário
     fetch("http://localhost:5047/api/User/me", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("User Data:", data);
-
         setId(data.id);
-        console.log("aa", data);
         setUser(data);
         setFormData(data);
       })
       .catch((error) =>
         console.error("Erro ao buscar dados do usuário:", error)
       );
-  }, [navigate, setUser]);
 
-  const handleEditToggle = () => {
-    setIsEditing(!isEditing);
-  };
+    // Carregar pedidos do usuário
+    if (user && user.id) {
+      const fetchOrders = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:5047/api/Order/user/${user.id}`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Erro ao buscar pedidos.");
+          }
+
+          const data = await response.json();
+          const updatedOrders = data.map((order) => {
+            const totalAmount = order.items.reduce(
+              (total, item) => total + item.price * item.quantity,
+              0
+            );
+            return { ...order, totalAmount };
+          });
+
+          setOrders(updatedOrders);
+        } catch (error) {
+          setErrorOrders(error.message);
+        } finally {
+          setLoadingOrders(false);
+        }
+      };
+
+      fetchOrders();
+    }
+  }, [navigate, setUser, user, token]);
+
+  const handleEditToggle = () => setIsEditing(!isEditing);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -80,8 +112,6 @@ const UserPage = () => {
       email: !formData.email,
     };
 
-    setErrors(validationErrors);
-
     if (Object.values(validationErrors).includes(true)) {
       return;
     }
@@ -93,27 +123,24 @@ const UserPage = () => {
     }
 
     try {
-      const response = await fetch(
-        `http://localhost:5047/api/User/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            email: user.email,
-            password: "123",
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            street: formData.street,
-            number: formData.number,
-            city: formData.city,
-            imageUrl: "",
-            phone: formData.phone,
-          }),
-        }
-      );
+      const response = await fetch(`http://localhost:5047/api/User/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          email: user.email,
+          password: "123",
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          street: formData.street,
+          number: formData.number,
+          city: formData.city,
+          imageUrl: "",
+          phone: formData.phone,
+        }),
+      });
 
       if (response.status === 204) {
         console.log("Usuário atualizado com sucesso");
@@ -136,182 +163,193 @@ const UserPage = () => {
     navigate("/login");
   };
 
+  const renderStars = (rating) => {
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 !== 0;
+    const stars = [];
+
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(
+        <span key={i} className="star full-star">
+          ★
+        </span>
+      );
+    }
+
+    if (halfStar) {
+      stars.push(
+        <span key="half" className="star half-star">
+          ★
+        </span>
+      );
+    }
+
+    for (let i = stars.length; i < 5; i++) {
+      stars.push(
+        <span key={i + 5} className="star empty-star">
+          ☆
+        </span>
+      );
+    }
+
+    return stars;
+  };
+
   return (
-    <div className="profile-container">
-      <div className="profile-header">
-        <div style={{ paddingLeft: "2%" }}>
-          <ArrowBackIcon
-            fontSize="small"
-            style={{ cursor: "pointer" }}
-            onClick={() => navigate("/")}
-          />
+    <>
+      <HeaderNav />
+      <Header />
+      <div className="user-page-columns">
+        <div className="user-info-column">
           <img
-            src={logo}
-            style={{
-              marginBottom: -20,
-              marginLeft: 20,
-              width: 200,
-              height: 60,
-              cursor: "pointer",
-            }}
-            onClick={() => navigate("/")}
+            src={formData.imageUrl || userImage}
+            alt="Foto do Usuário"
+            className="user-avatar"
           />
+          <h2>
+            {formData.firstName} {formData.lastName}
+          </h2>
+          <p className="user-email">{formData.email}</p>
+          <div className="user-rating">{renderStars(formData.rating)}</div>
+          <a className="user-logout" onClick={handleLogout}>
+            Desconectar
+          </a>
+        </div>
+        <div className="user-details-column">
+          {isEditing ? (
+            <form onSubmit={handleSubmit} className="user-edit-form">
+              <label>
+                Nome:
+                <input
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  className="input-field"
+                />
+              </label>
+              <label>
+                Sobrenome:
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  className="input-field"
+                />
+              </label>
+              <label>
+                Telefone:
+                <input
+                  type="text"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className="input-field"
+                />
+              </label>
+              <label>
+                Rua:
+                <input
+                  type="text"
+                  name="street"
+                  value={formData.street}
+                  onChange={handleChange}
+                  className="input-field"
+                />
+              </label>
+              <label>
+                Número:
+                <input
+                  type="text"
+                  name="number"
+                  value={formData.number}
+                  onChange={handleChange}
+                  className="input-field"
+                />
+              </label>
+              <label>
+                Cidade:
+                <input
+                  type="text"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
+                  className="input-field"
+                />
+              </label>
+              <button type="submit" className="btn-save">
+                Salvar
+              </button>
+              <span>{"  "}</span>
+              <button onClick={handleEditToggle} className="btn-logout">
+                Cancelar
+              </button>
+            </form>
+          ) : (
+            <>
+              <p>
+                <strong>Email:</strong> {formData.email}
+              </p>
+              <p>
+                <strong>Telefone:</strong> {formData.phone}
+              </p>
+              <p>
+                <strong>Endereço:</strong> {formData.street}, {formData.number}{" "}
+                - {formData.city}
+              </p>
+              <button
+                type="submit"
+                onClick={handleEditToggle}
+                className="btn-edit"
+              >
+                Editar
+              </button>
+
+              {/* Exibir pedidos */}
+              <div className="user-details">
+                <div className="user-orders">
+                  <h3>Pedidos Recentes</h3>
+                  <div className="order-list">
+                    {orders.slice(0, 2).map((order) => (
+                      <div className="order-card" key={order.id}>
+                        <div className="order-header">
+                          <h4>Pedido #{order.id.slice(0, 10) + "..."}</h4>
+                          <span
+                            className={`status ${order.status.toLowerCase()}`}
+                          >
+                            {order.status}
+                          </span>
+                        </div>
+                        <div className="order-details">
+                          <p>
+                            <strong>Data:</strong>{" "}
+                            {new Date(order.createdAt).toLocaleDateString()}
+                          </p>
+                          <p>
+                            <strong>Total:</strong> R$
+                            {order.totalAmount.toFixed(2)}
+                          </p>
+                        </div>
+                        <button
+                          className="view-details-btn"
+                          style={{ backgroundColor: "#3a3d46" }}
+                          onClick={() => navigate(`/order/${order.id}`)}
+                        >
+                          Detalhes
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+          {/*  */}
         </div>
       </div>
-      {user ? (
-        <div className="profile-wraper">
-          <h1>Ficha do Usuário:</h1>
-          <div className="profile-settings">
-            <img
-              src={"https://via.placeholder.com/150"}
-              alt="Foto de Perfil"
-              className="profile-picture"
-            />
-            <h2 className="profile-name">
-              {user.firstName} {user.lastName}
-            </h2>
-            <p className="profile-email">{user.email}</p>
-          </div>
-          <div className="profile-section">
-            <h3 className="section-title">Informações Pessoais</h3>
-            {isEditing ? (
-              <form onSubmit={handleSubmit}>
-                <div className="form-user-wrapper">
-                  <div className="form-user">
-                    <div className="form-user-line">
-                      <label style={{ fontSize: 14 }}>
-                        Nome:
-                        <input
-                          type="text"
-                          name="firstName"
-                          className="input-user-form"
-                          onChange={handleChange}
-                          value={formData.firstName}
-                        />
-                      </label>
-                    </div>
-
-                    <div className="form-user-line">
-                      <label style={{ fontSize: 14 }}>
-                        Sobrenome:
-                        <input
-                          type="text"
-                          name="lastName"
-                          className="input-user-form"
-                          onChange={handleChange}
-                          value={formData.lastName}
-                        />
-                      </label>
-                    </div>
-                    <div className="form-user-line">
-                      <label style={{ fontSize: 14 }}>
-                        Telefone:
-                        <input
-                          type="text"
-                          name="phone"
-                          className="input-user-form"
-                          value={formData.phone}
-                          onChange={handleChange}
-                        />
-                      </label>
-                    </div>
-                  </div>
-                  <div className="form-user">
-                    <div className="form-user-line">
-                      <label style={{ fontSize: 14 }}>
-                        Rua:
-                        <input
-                          type="text"
-                          name="street"
-                          className="input-user-form"
-                          value={formData.street}
-                          onChange={handleChange}
-                        />
-                      </label>
-                    </div>
-
-                    <div className="form-user-line">
-                      <label style={{ fontSize: 14 }}>
-                        Número:
-                        <input
-                          type="text"
-                          name="number"
-                          className="input-user-form"
-                          value={formData.number}
-                          onChange={handleChange}
-                        />
-                      </label>
-                    </div>
-                    <div className="form-user-line">
-                      Cidade:
-                      <label style={{ fontSize: 14 }}>
-                        <input
-                          type="text"
-                          name="city"
-                          className="input-user-form"
-                          value={formData.city}
-                          onChange={handleChange}
-                        />
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <div className="container-button2">
-                  <button className="btn-form" type="submit">
-                    Salvar
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <>
-                <p>
-                  <strong>Nome:</strong> {user.firstName} {user.lastName}
-                </p>
-                <p>
-                  <strong>Endereço:</strong> {user.street}, {user.number} -{" "}
-                  {user.city}
-                </p>
-                <p>
-                  <strong>Email:</strong> {user.email}
-                </p>
-                <p>
-                  <strong>Telefone:</strong> {user.phone}
-                </p>
-                <div className="container-button2">
-                  <button className="btn-form" onClick={handleEditToggle}>
-                    Editar
-                  </button>
-                  <button
-                    className="btn-form marginTop"
-                    onClick={() => {
-                      navigate("/order");
-                    }}
-                  >
-                    Pedidos
-                  </button>
-                  <button
-                    onClick={handleLogout}
-                    style={{
-                      marginTop: 5,
-                      color: "red",
-                      fontSize: 11,
-                      fontWeight: "lighter",
-                      border: "none",
-                      background: "none",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Desconectar
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      ) : (
-        <p>Carregando dados...</p>
-      )}
-    </div>
+      <Footer />
+    </>
   );
 };
 
