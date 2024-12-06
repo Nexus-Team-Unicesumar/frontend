@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 
-import { useNavigate } from "react-router-dom";
-
 import "./Cart.css";
+
+import { useNavigate } from "react-router-dom";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";

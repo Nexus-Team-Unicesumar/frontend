@@ -1,13 +1,13 @@
 import React, { useState, useContext } from "react";
 
+import "./style.css";
+
 import { useNavigate } from "react-router-dom";
 
 import { ShoppingCart, Person, Add } from "@mui/icons-material";
 import Badge from "@mui/material/Badge";
 
 import { AuthContext } from "../../auth/AuthContext";
-
-import "./style.css";
 
 const Header = ({ onSearch }) => {
   const navigate = useNavigate();

@@ -1,12 +1,17 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { AuthContext } from "../auth/AuthContext";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import logo from "../assets/logo.png";
+
 import "./OrderDetail.css";
 
+import { useParams, useNavigate } from "react-router-dom";
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
+import logo from "../assets/logo.png";
+
+import { AuthContext } from "../auth/AuthContext";
+
 const OrderDetail = () => {
-  const { id } = useParams(); // Captura o ID do pedido da URL
+  const { id } = useParams();
   const { token } = useContext(AuthContext);
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,15 +21,12 @@ const OrderDetail = () => {
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:5047/api/Order/${id}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(`http://localhost:5047/api/Order/${id}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (!response.ok) {
           throw new Error("Erro ao buscar detalhes do pedido.");
@@ -54,7 +56,7 @@ const OrderDetail = () => {
         <ArrowBackIcon
           fontSize="small"
           style={{ cursor: "pointer" }}
-          onClick={() => navigate(-1)} // Retorna à página anterior
+          onClick={() => navigate(-1)}
         />
         <img
           src={logo}

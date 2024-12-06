@@ -1,26 +1,28 @@
 import React from "react";
+
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-import { AuthProvider } from "./auth/AuthContext";
-import ProtectedRoute from "./service/ProtectedRoute";
-import { PayPalScriptProvider } from "@paypal/react-paypal-js";
-
-import Home from "./pages/Home";
-import UserPage from "./pages/UserPage";
+import FAQ from "./pages/FAQ";
 import Cart from "./pages/Cart";
-import ProductPage from "./pages/ProductPage";
+import Home from "./pages/Home";
 import Login from "./pages/Login";
-import UserForm from "./pages/UserForm";
-import ProductForm from "./pages/ProductForm";
 import Order from "./pages/Order";
-import OrderDetail from "./pages/OrderDetail";
 import About from "./pages/About";
-import History from "./pages/History";
 import Developers from "./pages/Dev";
 import Support from "./pages/Support";
-import FAQ from "./pages/FAQ";
+import History from "./pages/History";
+import UserPage from "./pages/UserPage";
+import UserForm from "./pages/UserForm";
+import OrderDetail from "./pages/OrderDetail";
+import ProductForm from "./pages/ProductForm";
+import ProductPage from "./pages/ProductPage";
 import TermsPrivacy from "./pages/TermsPrivacy";
 import ProductShopList from "./pages/ProductShopList";
+
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import ProtectedRoute from "./service/ProtectedRoute";
+
+import { AuthProvider } from "./auth/AuthContext";
 
 function App() {
   const initialOptions = {
@@ -35,10 +37,19 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />
+
             <Route path="/login" element={<Login />} />
-            <Route path="/cart" element={<Cart />} />
             <Route path="/user/form" element={<UserForm />} />
+            <Route
+              path="/user"
+              element={<ProtectedRoute element={<UserPage />} />}
+            />
+
+            <Route path="/cart" element={<Cart />} />
+
             <Route path="/product/form" element={<ProductForm />} />
+            <Route path="/produto/:id" element={<ProductPage />} />
+
             <Route path="/order" element={<Order />} />
             <Route path="/order/:id" element={<OrderDetail />} />
 
@@ -46,6 +57,7 @@ function App() {
               path="/categoria/:categoryName"
               element={<ProductShopList />}
             />
+
             {/* Sobre  */}
             <Route path="/about" element={<About />} />
             <Route path="/history" element={<History />} />
@@ -56,13 +68,6 @@ function App() {
             <Route path="/faq" element={<FAQ />} />
             <Route path="/politica-de-privacidade" element={<TermsPrivacy />} />
             <Route path="/termos-de-uso" element={<TermsPrivacy />} />
-
-            <Route
-              path="/user"
-              element={<ProtectedRoute element={<UserPage />} />}
-            />
-
-            <Route path="/produto/:id" element={<ProductPage />} />
           </Routes>
         </Router>
       </PayPalScriptProvider>

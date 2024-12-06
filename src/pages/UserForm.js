@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
 import "./UserForm.css";
+
+import { useNavigate } from "react-router-dom";
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
 import logo from "../assets/logo.png";
 
 const UserForm = (props) => {
@@ -21,26 +25,23 @@ const UserForm = (props) => {
     e.preventDefault();
 
     try {
-      const response = await fetch(
-        `http://localhost:5047/api/User`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            password,
-            firstName,
-            lastName,
-            street,
-            number,
-            city,
-            imageUrl,
-            phone,
-          }),
-        }
-      );
+      const response = await fetch(`http://localhost:5047/api/User`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          firstName,
+          lastName,
+          street,
+          number,
+          city,
+          imageUrl,
+          phone,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error("Erro ao realizar login. Verifique suas credenciais.");
