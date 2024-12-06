@@ -16,6 +16,7 @@ import Order from "./pages/Order";
 import OrderDetail from "./pages/OrderDetail";
 import About from "./pages/About";
 import History from "./pages/History";
+import Developers from "./pages/Dev";
 
 function App() {
   const initialOptions = {
@@ -40,6 +41,7 @@ function App() {
             {/* Sobre  */}
             <Route path="/about" element={<About />} />
             <Route path="/history" element={<History />} />
+            <Route path="/devs" element={<Developers />} />
 
             <Route
               path="/user"
