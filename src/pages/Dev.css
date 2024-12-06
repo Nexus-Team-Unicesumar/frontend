@@ -1,0 +1,58 @@
+.developers-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.developers-container h1 {
+  text-align: center;
+  font-size: 2.4rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.developers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.developer {
+  display: flex;
+  align-items: center;
+}
+
+.developer-left {
+  flex-direction: row;
+}
+
+.developer-right {
+  flex-direction: row-reverse;
+}
+
+.developer-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 20px;
+}
+
+.developer-description {
+  max-width: 500px;
+}
+
+.developer-description h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.developer-description p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #555;
+}
