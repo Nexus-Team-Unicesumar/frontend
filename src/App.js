@@ -19,6 +19,7 @@ import History from "./pages/History";
 import Developers from "./pages/Dev";
 import Support from "./pages/Support";
 import FAQ from "./pages/FAQ";
+import TermsPrivacy from "./pages/TermsPrivacy";
 
 function App() {
   const initialOptions = {
@@ -48,6 +49,8 @@ function App() {
             {/* Suporte */}
             <Route path="/suporte" element={<Support />} />
             <Route path="/faq" element={<FAQ />} />
+            <Route path="/politica-de-privacidade" element={<TermsPrivacy />} />
+            <Route path="/termos-de-uso" element={<TermsPrivacy />} />
 
             <Route
               path="/user"
