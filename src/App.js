@@ -20,6 +20,7 @@ import Developers from "./pages/Dev";
 import Support from "./pages/Support";
 import FAQ from "./pages/FAQ";
 import TermsPrivacy from "./pages/TermsPrivacy";
+import ProductShopList from "./pages/ProductShopList";
 
 function App() {
   const initialOptions = {
@@ -41,6 +42,10 @@ function App() {
             <Route path="/order" element={<Order />} />
             <Route path="/order/:id" element={<OrderDetail />} />
 
+            <Route
+              path="/categoria/:categoryName"
+              element={<ProductShopList />}
+            />
             {/* Sobre  */}
             <Route path="/about" element={<About />} />
             <Route path="/history" element={<History />} />
