@@ -18,6 +18,7 @@ import About from "./pages/About";
 import History from "./pages/History";
 import Developers from "./pages/Dev";
 import Support from "./pages/Support";
+import FAQ from "./pages/FAQ";
 
 function App() {
   const initialOptions = {
@@ -46,6 +47,7 @@ function App() {
 
             {/* Suporte */}
             <Route path="/suporte" element={<Support />} />
+            <Route path="/faq" element={<FAQ />} />
 
             <Route
               path="/user"
