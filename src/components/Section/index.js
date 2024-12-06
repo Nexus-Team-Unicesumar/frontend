@@ -1,6 +1,8 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+
 import "./style.css";
+
+import { useNavigate } from "react-router-dom";
 
 const mapCategoriesToPortuguese = (categories) => {
   return categories.map(({ apiCategory, displayName }) => ({

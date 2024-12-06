@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
+
 import "./UserPage.css";
+
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../auth/AuthContext";
+
 import Header from "../components/Header";
 import HeaderNav from "../components/HeaderNav";
 import userImage from "../assets/user.jpg";
 import Footer from "../components/Footer";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
+import { AuthContext } from "../auth/AuthContext";
 
 const UserPage = () => {
   const navigate = useNavigate();

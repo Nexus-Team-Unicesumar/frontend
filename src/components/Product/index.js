@@ -1,6 +1,9 @@
 import React from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import "./style.css";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { Link } from "react-router-dom";
 
 const Product = (props) => {

@@ -1,9 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
-import logo from "../assets/logo.png";
-import { AuthContext } from "../auth/AuthContext";
-import { useNavigate } from "react-router-dom";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
 import "./Order.css";
+
+import { useNavigate } from "react-router-dom";
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
+import logo from "../assets/logo.png";
+
+import { AuthContext } from "../auth/AuthContext";
 
 const OrderPage = () => {
   const { user, token } = useContext(AuthContext);
