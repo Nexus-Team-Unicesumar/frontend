@@ -17,6 +17,7 @@ import OrderDetail from "./pages/OrderDetail";
 import About from "./pages/About";
 import History from "./pages/History";
 import Developers from "./pages/Dev";
+import Support from "./pages/Support";
 
 function App() {
   const initialOptions = {
@@ -42,6 +43,9 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/history" element={<History />} />
             <Route path="/devs" element={<Developers />} />
+
+            {/* Suporte */}
+            <Route path="/suporte" element={<Support />} />
 
             <Route
               path="/user"
